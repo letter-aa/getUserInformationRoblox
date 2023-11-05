@@ -19,14 +19,15 @@ string startInput(string preMessage)
 {
 	string input;
 	int rowPos = 0;
-	cout << preMessage;
-	for (int i = 0; i != 13;) {
+	int linePos = 0;
+
+	for (int i = 0;;) {
 		i = _getch();
 		if (i == 8) {
-			cout << "\b \b";
-			input.pop_back();
 			if (rowPos > 0) {
 				rowPos = rowPos - 1;
+				cout << "\b \b";
+				input.pop_back();
 			}
 		}
 		else {
@@ -53,10 +54,19 @@ string startInput(string preMessage)
 				}
 				break;
 			default:
-				cout << (char)i;
-				rowPos = rowPos + 1;
-				input = input + (char)i;
-
+				if (rowPos == input.size()) {
+					input = input + (char)i;
+					cout << "\r" << input;
+					rowPos = rowPos + 1;
+				}
+				else {
+					input = input.substr(0, rowPos) + (char)i + input.substr(rowPos);
+					cout << "\r" << input;
+					for (int i = 0; i < input.size() - rowPos; i++) {
+						cout << "\b";
+					}
+					rowPos = rowPos + 1;
+				}
 			}
 		}
 	}
